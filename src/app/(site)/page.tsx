@@ -1,5 +1,6 @@
 import Image from "next/image"
 import AuthForm from "./components/AuthForm"
+import { useEffect } from "react"
 
 export default function Home() {
     return (
