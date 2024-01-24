@@ -6,6 +6,8 @@ import {Input} from '@/app/components/Inputs/Input';
 import { Button } from '@/app/components/Button';
 import { AuthSocialButton } from './AuthSocialButton';
 import { BsGithub, BsGoogle } from 'react-icons/bs';
+import axios from 'axios';
+import {toast} from 'react-hot-toast';
 // import {Input} from '../../components/Inputs/Input';
 
 type Variant = 'LOGIN' | 'REGISTER'
@@ -34,17 +36,29 @@ const AuthForm = () => {
         }
     });
 
-    const onSubmit : SubmitHandler<FieldValues> = (data) => {
+    const onSubmit : SubmitHandler<FieldValues> = async(data) => {
         setLoading(true);
 
         if(variant === 'REGISTER') {
             // Axios register
             console.log('Registering with: ', data);
+            axios.post('/api/register', data).then((res) => {
+                console.log(res);
+                toast.success('Registered successfully')
+                setVariant('LOGIN')
+            }).catch((error)=>{
+                console.log(error);
+                toast.error('Something went wrong!!')
+            }).finally(()=> {
+                setLoading(false);
+            })
         }
 
         if(variant === 'LOGIN') {
             // Next Auth sign in
             console.log('Logging in with: ', data);
+
+            setVariant('REGISTER')
         }
     }
 
