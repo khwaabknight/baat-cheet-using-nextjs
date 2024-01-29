@@ -1,11 +1,16 @@
-import mongoose from 'mongoose';
+import mongoose,{Types,Schema} from 'mongoose';
 
-const conversationSchema = new mongoose.Schema({
-    createdAt: {
-        type: Date,
-        required: [true,"Please provide created at"],
-        default: Date.now,
-    },
+export type ConversationType = {
+    _id: Types.ObjectId,
+    createdAt: Date,
+    lastMessageAt: Date,
+    name: string,
+    isGroup: boolean,
+    messagesIds: Types.ObjectId[],
+    userIds: Types.ObjectId,
+}
+
+const conversationSchema = new Schema<ConversationType>({
     lastMessageAt: {
         type: Date,
         required: [true,"Please provide last message at"],
@@ -29,7 +34,7 @@ const conversationSchema = new mongoose.Schema({
         required: [true,"Please provide user id"],
         ref: 'User',
     },
-});
+},{timestamps:true},);
 
 const Conversation =  mongoose.models.conversations || mongoose.model('Conversation', conversationSchema);
 

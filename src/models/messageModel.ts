@@ -1,17 +1,21 @@
-import mongoose from 'mongoose';
+import mongoose,{Types,Schema} from 'mongoose';
+export type MessageType = {
+    _id: Types.ObjectId,
+    body: string,
+    image: string,
+    createdAt: Date,
+    seenIds: Types.ObjectId[],
+    conversationId: Types.ObjectId,
+    senderId: Types.ObjectId,
+}
 
-const messageSchema = new mongoose.Schema({
+const messageSchema = new Schema<MessageType>({
     body: {
         type: String,
     },
     image: {
         type: String,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-
     seenIds: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -28,7 +32,7 @@ const messageSchema = new mongoose.Schema({
         required: [true,"Please provide sender id"],
         ref: 'User',
     },
-});
+},{timestamps: true});
 
 const Message = mongoose.models.Message || mongoose.model('Message', messageSchema);
 

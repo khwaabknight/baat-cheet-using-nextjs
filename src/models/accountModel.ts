@@ -1,6 +1,21 @@
-import mongoose from "mongoose";
+import mongoose,{Types,Schema} from "mongoose";
 
-const accountSchema = new mongoose.Schema({
+export type AccountType = {
+    _id: Types.ObjectId,
+    userId : Types.ObjectId,
+    accountType : string,
+    provider: string,
+    providerAccountId: string,
+    refreshToken: string,
+    accessToken: string,
+    expiresAt: number,
+    tokenType: string,
+    scope: string,
+    idToken: string,
+    sessionState: string,
+}
+
+const accountSchema = new Schema<AccountType>({
     userId : {
         type: mongoose.Schema.Types.ObjectId,
         required: [true,"Please provide user id"],
@@ -25,7 +40,7 @@ const accountSchema = new mongoose.Schema({
         type: String,
     },
     expiresAt: {
-        type: Integer,
+        type: Number,
     },
     tokenType: {
         type: String,

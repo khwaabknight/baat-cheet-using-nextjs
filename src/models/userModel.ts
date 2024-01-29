@@ -1,6 +1,22 @@
-import mongoose from 'mongoose'
 
-const userSchema = new mongoose.Schema({
+import mongoose,{Types,Schema} from 'mongoose'
+
+export type UserType = {
+    _id: Types.ObjectId,
+    name: string,
+    email: string,
+    emailVerified: Date,
+    image: string,
+    password: string,
+    createdAt: Date,
+    updatedAt: Date,
+    conversationIds: Types.ObjectId[],
+    seenMessageIds: Types.ObjectId[],
+    accounts: Types.ObjectId[],
+    messages: Types.ObjectId[],
+}
+
+const userSchema = new Schema<UserType>({
     name: {
         type:String,
     },
@@ -16,13 +32,6 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type:String,
-    },
-    createdAt:{
-        type:Date,
-        default:Date.now,
-    },
-    updatedAt:{
-        type:Date,
     },
     conversationIds: [
         {
@@ -50,7 +59,7 @@ const userSchema = new mongoose.Schema({
             ref: 'Message',
         }
     ],
-})
+},{timestamps:true},)
 
 // const User = mongoose.models.users || mongoose.model('users',userSchema);
 const User = mongoose.models.User || mongoose.model('User',userSchema);
