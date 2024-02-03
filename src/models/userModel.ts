@@ -1,5 +1,8 @@
 
 import mongoose,{Types,Schema} from 'mongoose'
+import { ConversationType } from './conversationModel';
+import { MessageType } from './messageModel';
+import { AccountType } from './accountModel';
 
 export type UserType = {
     _id: Types.ObjectId,
@@ -10,10 +13,10 @@ export type UserType = {
     password: string,
     createdAt: Date,
     updatedAt: Date,
-    conversationIds: Types.ObjectId[],
-    seenMessageIds: Types.ObjectId[],
-    accounts: Types.ObjectId[],
-    messages: Types.ObjectId[],
+    conversations: Types.ObjectId[] | ConversationType[],
+    seenMessages: Types.ObjectId[] | MessageType[],
+    accounts: Types.ObjectId[] | AccountType[],
+    messages: Types.ObjectId[] | MessageType[],
 }
 
 const userSchema = new Schema<UserType>({
@@ -33,14 +36,14 @@ const userSchema = new Schema<UserType>({
     password: {
         type:String,
     },
-    conversationIds: [
+    conversations: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Conversation',
         }
     ],
 
-    seenMessageIds: [
+    seenMessages: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Message',
@@ -62,7 +65,7 @@ const userSchema = new Schema<UserType>({
 },{timestamps:true},)
 
 // const User = mongoose.models.users || mongoose.model('users',userSchema);
-const User = mongoose.models.User || mongoose.model('User',userSchema);
+const User = mongoose.models.User || mongoose.model<UserType>('User',userSchema);
  // You can use 'User' also instead of 'users'
 
 export default User;

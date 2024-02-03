@@ -1,4 +1,6 @@
 import mongoose,{Types,Schema} from 'mongoose';
+import { MessageType } from './messageModel';
+import { UserType } from './userModel';
 
 export type ConversationType = {
     _id: Types.ObjectId,
@@ -6,14 +8,14 @@ export type ConversationType = {
     lastMessageAt: Date,
     name: string,
     isGroup: boolean,
-    messagesIds: Types.ObjectId[],
-    userIds: Types.ObjectId,
+    messages: Types.ObjectId[] | MessageType[],
+    users: Types.ObjectId | UserType,
 }
 
 const conversationSchema = new Schema<ConversationType>({
     lastMessageAt: {
         type: Date,
-        required: [true,"Please provide last message at"],
+        default: Date.now,
     },
     name: {
         type: String,
@@ -21,21 +23,21 @@ const conversationSchema = new Schema<ConversationType>({
     isGroup: {
         type: Boolean,
     },
-
-    messagesIds: [
+    messages: [
         {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Message',
         }
     ],
-
-    userIds : {
+    users : [
+        {
         type: mongoose.Schema.Types.ObjectId,
         required: [true,"Please provide user id"],
         ref: 'User',
-    },
+        }
+    ]
 },{timestamps:true},);
 
-const Conversation =  mongoose.models.conversations || mongoose.model('Conversation', conversationSchema);
+const Conversation =  mongoose.models.Conversation || mongoose.model<ConversationType>('Conversation', conversationSchema);
 
 export default Conversation;

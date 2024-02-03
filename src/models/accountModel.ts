@@ -1,8 +1,9 @@
 import mongoose,{Types,Schema} from "mongoose";
+import { UserType } from "./userModel";
 
 export type AccountType = {
     _id: Types.ObjectId,
-    userId : Types.ObjectId,
+    userId : Types.ObjectId | UserType,
     accountType : string,
     provider: string,
     providerAccountId: string,
@@ -59,6 +60,6 @@ const accountSchema = new Schema<AccountType>({
 
 accountSchema.index({provider:1,providerAccountId:1},{unique:true});  // This is to make sure that the combination of provider and providerAccountId is unique
 
-const Account = mongoose.models.accounts || mongoose.model('Account',accountSchema);
+const Account = mongoose.models.accounts || mongoose.model<AccountType>('Account',accountSchema);
 
 export default Account;

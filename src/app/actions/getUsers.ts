@@ -1,7 +1,7 @@
 import User from "@/models/userModel";
-import mongoClientPromise from "../libs/mongoClientPromise";
 import getSession from "./getSession";
-
+import { connect } from "@/dbconfig/dbconfig";
+connect()
 const getUsers = async () => {
     const session = await getSession();
 

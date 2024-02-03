@@ -1,10 +1,9 @@
-import mongoClientPromise from '@/app/libs/mongoClientPromise';
 import getSession from './getSession';
 import User from '@/models/userModel';
 import { connect } from '@/dbconfig/dbconfig';
 
+connect();
 const getCurrentUser = async () => {
-    await connect();
     try {
         const session = await getSession();
         

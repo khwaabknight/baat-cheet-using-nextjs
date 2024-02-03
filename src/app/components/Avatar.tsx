@@ -1,10 +1,10 @@
 'use cient';
 
-import User from "@/models/userModel";
+import {UserType} from "@/models/userModel";
 import Image from "next/image";
 
 interface AvatarProps {
-    user: typeof User & {image:string};
+    user: UserType;
 }
 
 const Avatar : React.FC<AvatarProps> = ({user}) => {

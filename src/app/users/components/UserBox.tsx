@@ -1,12 +1,12 @@
 'use client';
 import Avatar from "@/app/components/Avatar";
-import User from "@/models/userModel";
+import {UserType} from "@/models/userModel";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 
 interface UserBoxProps {
-    data: typeof User;
+    data: UserType;
 }
 
 const UserBox:React.FC<UserBoxProps> = ({data}) => {
@@ -18,7 +18,10 @@ const UserBox:React.FC<UserBoxProps> = ({data}) => {
         axios.post('/api/conversations',{
             userId : data._id
         }).then((data) => {
-            router.push(`/conversations/${data.data._id}`)
+            console.log(data)
+            router.push(`/conversations/${data.data.data._id}`)
+        }).catch((err) => {
+            console.log(err);
         }).finally(() => {
             setLoading(false);
         })

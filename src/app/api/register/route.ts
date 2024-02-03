@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import mongoClientPromise from "@/app/libs/mongoClientPromise";
 import {NextRequest,NextResponse} from 'next/server';
 import User from '@/models/userModel';
 import { connect } from "@/dbconfig/dbconfig";
