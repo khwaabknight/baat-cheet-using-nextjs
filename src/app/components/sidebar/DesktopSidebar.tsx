@@ -3,18 +3,16 @@
 import useRoutes from "@/app/hooks/useRoutes";
 import { useEffect, useState } from "react";
 import DesktopItem from "./DesktopItem";
-import User from "@/models/userModel";
+import { UserType } from "@/models/userModel";
 import Avatar from "../Avatar";
 
 interface DesktopSidebarProps {
-    currentuser: typeof User;
+    currentuser: UserType;
 }
 
 const DesktopSidebar : React.FC<DesktopSidebarProps> = ({currentuser}) => {
     const routes = useRoutes();
     const [isOpen, setIsOpen] = useState(false);
-
-    console.log(currentuser)
 
 
   return (
