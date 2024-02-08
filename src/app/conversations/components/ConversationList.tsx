@@ -1,16 +1,17 @@
-'use client';
+'use client'
 
-import { ConversationType } from "@/models/conversationModel";
+import { FullConversationType } from "@/app/types";
 
-interface ConversationListProps {
-    initialItems: ConversationType[];
+type ConversationListProps = {
+    initialItems : FullConversationType[];
 }
 
 const ConversationList : React.FC<ConversationListProps> = ({initialItems}) => {
+  
+
+
   return (
-    <div>
-        Conversation List!
-    </div>
+    <div>ConversationList</div>
   )
 }
 
