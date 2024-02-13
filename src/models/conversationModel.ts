@@ -31,9 +31,9 @@ const conversationSchema = new Schema<ConversationType>({
     ],
     users : [
         {
-        type: mongoose.Schema.Types.ObjectId,
-        required: [true,"Please provide user id"],
-        ref: 'User',
+            type: mongoose.Schema.Types.ObjectId,
+            required: [true,"Please provide user id"],
+            ref: 'User',
         }
     ]
 },{timestamps:true},);

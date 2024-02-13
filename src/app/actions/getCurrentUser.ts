@@ -2,9 +2,10 @@ import getSession from './getSession';
 import User from '@/models/userModel';
 import { connect } from '@/dbconfig/dbconfig';
 
-connect();
+
 const getCurrentUser = async () => {
     try {
+        await connect();
         const session = await getSession();
         
         if(!session?.user?.email) return null;
