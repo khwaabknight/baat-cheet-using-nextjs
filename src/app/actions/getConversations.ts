@@ -1,6 +1,7 @@
 import Conversation from "@/models/conversationModel";
 import getCurrentUser from "./getCurrentUser";
-import {connect} from "@/dbconfig/dbconfig"
+import {connect} from "@/dbconfig/dbconfig";
+import Message from "@/models/messageModel";
 
 const getConversations = async () => {
     await connect();
@@ -13,11 +14,13 @@ const getConversations = async () => {
 
     try {
         // Message is not made yet
+        const message = await Message.find({});
         const conversations = await Conversation.find({users : currentUser._id}).sort({ lastMessageAt: -1 }).populate([{
                 path:'users',
                 model:'User',
             },{
                 path:'messages',
+                model:'Message',
                 populate: [
                     {
                         path : 'sender',
@@ -30,6 +33,7 @@ const getConversations = async () => {
                 ]
             }
         ]).exec();
+        console.log('conversations in get conversations',conversations)
 
         // const conversations = await Conversation.find({users : currentUser._id}).populate('users').exec();
         return conversations;

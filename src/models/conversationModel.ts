@@ -9,7 +9,7 @@ export type ConversationType = {
     name: string,
     isGroup: boolean,
     messages: Types.ObjectId[] | MessageType[],
-    users: Types.ObjectId | UserType,
+    users: UserType[] | Types.ObjectId[],
 }
 
 const conversationSchema = new Schema<ConversationType>({
