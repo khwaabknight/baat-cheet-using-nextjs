@@ -24,7 +24,9 @@ export async function POST(request: NextRequest) {
     
     if(isGroup){
         const users = members.map((member : any) => member.value); // have to change later
-        users.append(currentUser._id);
+        console.log(users)
+
+        users.push(currentUser._id);
 
         const newConversation = await Conversation.create({
             name,

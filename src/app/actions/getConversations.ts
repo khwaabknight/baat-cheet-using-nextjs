@@ -33,7 +33,6 @@ const getConversations = async () => {
                 ]
             }
         ]).exec();
-        console.log('conversations in get conversations',conversations)
 
         // const conversations = await Conversation.find({users : currentUser._id}).populate('users').exec();
         return conversations;
