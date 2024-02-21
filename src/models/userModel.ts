@@ -62,7 +62,23 @@ const userSchema = new Schema<UserType>({
             ref: 'Message',
         }
     ],
-},{timestamps:true},)
+    createdAt:{
+        type: Date,
+        default: Date.now,
+    },
+    updatedAt:{
+        type: Date,
+        default: Date.now,
+    }
+})
+
+userSchema.pre('save',function(next){
+    this.updatedAt = new Date();
+    if(!this.createdAt){
+        this.createdAt = new Date();
+    }
+    next();
+})
 
 // const User = mongoose.models.users || mongoose.model('users',userSchema);
 const User = mongoose.models.User || mongoose.model<UserType>('User',userSchema);
