@@ -15,7 +15,6 @@ const ConversationId = async ({params} : {params: IParams}) => {
     const messages = await getMessages(params.conversationId);
     const plainConversation = await JSON.parse(JSON.stringify(conversation));
     const plainMessages = await JSON.parse(JSON.stringify(messages));
-    console.log('plain Messages',plainMessages)
 
     if(!plainConversation) {
         return (
