@@ -3,6 +3,7 @@ import { connect } from "@/dbconfig/dbconfig";
 import Conversation from "@/models/conversationModel";
 import Message from "@/models/messageModel";
 import { NextRequest, NextResponse } from "next/server";
+import { pusherServer } from "@/app/libs/pusher";
 
 export async function POST(request:NextRequest) {
     try {
@@ -47,6 +48,20 @@ export async function POST(request:NextRequest) {
                 ]
             }
         ]).exec();
+
+        await pusherServer.trigger(conversationId, 'new-message', newMessagePopulated);
+
+        const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1];
+
+        updatedConversation.users.map((user) => {
+            pusherServer.trigger(user.email, 'update-conversation', {
+                _id: conversationId,
+                messages: [lastMessage],
+            })
+        });
+
+        
+
         
         return NextResponse.json({message:newMessagePopulated,conversation:updatedConversation});
     } catch (error : any) {

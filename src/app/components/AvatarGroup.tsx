@@ -10,7 +10,6 @@ interface AvatarGroupProps {
 const AvatarGroup:React.FC<AvatarGroupProps> = ({users = []}) => {
 
     const slicedUsers = users.slice(0,3)
-    console.log(slicedUsers);
 
     const positionMap = {
         0:'top-1 left-3',
@@ -20,9 +19,7 @@ const AvatarGroup:React.FC<AvatarGroupProps> = ({users = []}) => {
   return (
     <div className="relative h-11 w-11">
         {
-            slicedUsers.map((user,index) => {
-                console.log(user)
-                
+            slicedUsers.map((user,index) => {                
                 return(
                 <div key={user._id.toString()} className={`absolute inline-block rounded-full overflow-hidden h-5 w-5 bg-black z-50 ${positionMap[index as keyof typeof positionMap]}`}>
                     <Image 

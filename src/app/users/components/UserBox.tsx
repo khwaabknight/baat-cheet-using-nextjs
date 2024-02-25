@@ -19,7 +19,6 @@ const UserBox:React.FC<UserBoxProps> = ({data}) => {
         axios.post('/api/conversations',{
             userId : data._id
         }).then((data) => {
-            console.log(data)
             router.push(`/conversations/${data.data.data._id}`)
         }).catch((err) => {
             console.log(err);

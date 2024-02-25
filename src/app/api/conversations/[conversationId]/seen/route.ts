@@ -1,4 +1,5 @@
 import getCurrentUser from "@/app/actions/getCurrentUser";
+import { pusherServer } from "@/app/libs/pusher";
 import Conversation from "@/models/conversationModel";
 import Message from "@/models/messageModel";
 import { NextRequest, NextResponse } from "next/server";
@@ -40,13 +41,28 @@ export async function POST(request: NextRequest,{params}: {params: IParams}) {
             return NextResponse.json({conversation});
         }
         // Update seen of last message
-        const updatedMessage = await Message.findByIdAndUpdate(lastMessage._id,{$addToSet : {seenBy: currentuser._id}}).populate("seenBy sender").exec();
+        const updatedMessage = await Message.findByIdAndUpdate(
+            lastMessage._id,
+            {$addToSet : {seenBy: currentuser._id}},
+            {new:true}).populate("seenBy sender").exec();
+
+        console.log("updatedMessage",updatedMessage);
+
+        await pusherServer.trigger(currentuser.email,'update-conversation',{
+            _id:conversationId,
+            messages:[updatedMessage],
+        });
+
+        if(lastMessage.seenBy.indexOf(currentuser._id) !== -1){
+            return NextResponse.json({conversation},{status: 200});
+        }
+
+        await pusherServer.trigger(conversationId?.toString()!,'update-message',updatedMessage);
 
         return NextResponse.json({updatedMessage},{status: 200});
     } catch (error:any) {
-        console.log("Conversation/conversationId/seen API Error: ", error);    
+        console.log("Conversation/conversationId/seen API Error: ", error);
         return NextResponse.json({error: error.message}, {status: 500});
-        
     }
 
 

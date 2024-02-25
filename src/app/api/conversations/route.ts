@@ -2,6 +2,7 @@ import getCurrentUser from '@/app/actions/getCurrentUser';
 import { NextRequest, NextResponse } from 'next/server';
 import Conversation from '@/models/conversationModel';
 import { connect } from '@/dbconfig/dbconfig';
+import { pusherServer } from '@/app/libs/pusher';
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,7 +35,12 @@ export async function POST(request: NextRequest) {
             users,
         })
         const newConversationPopulated = await Conversation.populate(newConversation,{path:'users'});
-        console.log(newConversationPopulated)
+
+        newConversationPopulated.users.forEach((user) => {
+            if(user.email) {
+                pusherServer.trigger(user.email, 'new-conversation', newConversationPopulated);
+            }
+        })
         return NextResponse.json({data:newConversationPopulated},{status:200})
     }
     const users = [userId,currentUser._id];
@@ -52,6 +58,12 @@ export async function POST(request: NextRequest) {
         users,
     })
     const newConversationPopulated = await Conversation.populate(newConversation,{path:'users'});
+
+    newConversationPopulated.users.map((user) => {
+        if(user.email) {
+            pusherServer.trigger(user.email, 'new-conversation', newConversationPopulated);
+        }
+    })
 
     return NextResponse.json({data:newConversationPopulated},{status:200})
 

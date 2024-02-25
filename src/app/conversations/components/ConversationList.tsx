@@ -4,11 +4,13 @@ import useConversation from "@/app/hooks/useConversation";
 import { FullConversationType } from "@/app/types";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import ConversationBox from "./ConversationBox";
 import GroupChatModal from "./GroupChatModal";
 import { UserType } from "@/models/userModel";
+import { useSession } from "next-auth/react";
+import { pusherClient } from "@/app/libs/pusher";
 
 type ConversationListProps = {
   initialItems : FullConversationType[];
@@ -16,11 +18,67 @@ type ConversationListProps = {
 }
 
 const ConversationList : React.FC<ConversationListProps> = ({initialItems,users}) => {
+  const session = useSession();
   const [items, setItems] = useState(initialItems)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const router = useRouter();
   const {conversationId, isOpen} = useConversation();
+
+  const pusherKey = useMemo(() => {
+    return session.data?.user?.email;
+  },[session.data?.user?.email]);
+
+  useEffect(() => {
+    if(!pusherKey) return;
+
+    pusherClient.subscribe(pusherKey);
+
+    const findFirst = (arr:FullConversationType[],message:FullConversationType) =>(arr.filter((item) => item._id === message._id)[0])
+
+    const newConvHandler = (conversation:FullConversationType) => {
+      setItems((current) => {
+        if(findFirst(current,conversation)) {
+          return current;
+        }
+
+        return [conversation,...current];
+      })
+    }
+
+    const updateHandler = (conversation:FullConversationType) => {
+      setItems((current) => current.map((currConv) => {
+        if(currConv._id === conversation._id) {
+          return {
+            ...currConv,
+            messages: conversation.messages,
+          }
+        }
+        return currConv;
+      }))
+    }
+
+    const removeHandler = (conversation:FullConversationType) => {
+      setItems((current) => {
+        return [...current.filter((conv) => conv._id !== conversation._id)];
+      })
+
+      if(conversationId === conversation._id.toString()) {
+        router.push("/conversations");
+      }
+    }
+
+    pusherClient.bind('new-conversation', newConvHandler);
+    pusherClient.bind('update-conversation', updateHandler);
+    pusherClient.bind('delete-conversation', removeHandler);
+
+    return () => {
+      pusherClient.unsubscribe(pusherKey);
+      pusherClient.unbind('new-conversation', newConvHandler);
+      pusherClient.unbind('update-conversation', updateHandler);
+      pusherClient.unbind('delete-conversation', removeHandler);
+    }
+  },[pusherKey,conversationId,router]);
 
 
   return (
