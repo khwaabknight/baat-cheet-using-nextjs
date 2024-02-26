@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Conversation from '@/models/conversationModel';
 import { connect } from '@/dbconfig/dbconfig';
 import { pusherServer } from '@/app/libs/pusher';
+import { UserType } from '@/models/userModel';
 
 export async function POST(request: NextRequest) {
   try {
@@ -36,7 +37,7 @@ export async function POST(request: NextRequest) {
         })
         const newConversationPopulated = await Conversation.populate(newConversation,{path:'users'});
 
-        newConversationPopulated.users.forEach((user) => {
+        newConversationPopulated.users.forEach((user : UserType) => {
             if(user.email) {
                 pusherServer.trigger(user.email, 'new-conversation', newConversationPopulated);
             }
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
     })
     const newConversationPopulated = await Conversation.populate(newConversation,{path:'users'});
 
-    newConversationPopulated.users.map((user) => {
+    newConversationPopulated.users.map((user : UserType) => {
         if(user.email) {
             pusherServer.trigger(user.email, 'new-conversation', newConversationPopulated);
         }

@@ -4,6 +4,7 @@ import Conversation from "@/models/conversationModel";
 import Message from "@/models/messageModel";
 import { NextRequest, NextResponse } from "next/server";
 import { pusherServer } from "@/app/libs/pusher";
+import { UserType } from "@/models/userModel";
 
 export async function POST(request:NextRequest) {
     try {
@@ -53,7 +54,7 @@ export async function POST(request:NextRequest) {
 
         const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1];
 
-        updatedConversation.users.map((user) => {
+        updatedConversation.users.map((user : UserType) => {
             pusherServer.trigger(user.email, 'update-conversation', {
                 _id: conversationId,
                 messages: [lastMessage],

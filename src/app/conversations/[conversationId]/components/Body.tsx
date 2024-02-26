@@ -16,9 +16,11 @@ const Body : React.FC<BodyProps>= ({initialMessages = []}) => {
 
   const {conversationId} = useConversation();
 
+  let temp = messages[-1]?._id.toString();
+
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`);
-  },[conversationId,messages[messages.length-1]?._id]);
+  },[conversationId,temp]);
 
   useEffect(() => {
     let channel = pusherClient.subscribe(conversationId.toString());

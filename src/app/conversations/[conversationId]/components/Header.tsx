@@ -2,16 +2,15 @@
 
 import Avatar from "@/app/components/Avatar";
 import useOtherUser from "@/app/hooks/useOtherUser";
-import { ConversationType } from "@/models/conversationModel";
-import { UserType } from "@/models/userModel";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { HiChevronLeft, HiEllipsisHorizontal } from "react-icons/hi2";
 import ProfileDrawer from "./ProfileDrawer";
 import AvatarGroup from "@/app/components/AvatarGroup";
+import { FullConversationType } from "@/app/types";
 
 interface HeaderProps {
-    conversation: ConversationType;
+    conversation: FullConversationType;
 }
 
 const Header : React.FC<HeaderProps>= ({conversation}) => {

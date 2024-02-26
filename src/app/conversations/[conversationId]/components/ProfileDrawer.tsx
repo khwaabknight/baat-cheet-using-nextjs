@@ -2,16 +2,16 @@
 
 import Avatar from "@/app/components/Avatar";
 import useOtherUser from "@/app/hooks/useOtherUser";
-import { ConversationType } from "@/models/conversationModel";
 import { Dialog, Transition } from "@headlessui/react";
 import { format } from "date-fns";
 import { Fragment, useMemo, useState } from "react";
 import { IoClose, IoTrash } from "react-icons/io5";
 import ConfirmModal from "./ConfirmModal";
 import AvatarGroup from "@/app/components/AvatarGroup";
+import { FullConversationType } from "@/app/types";
 
 interface ProfileDrawerProps {
-    data: ConversationType;
+    data: FullConversationType;
     isOpen: boolean;
     onClose: () => void;
 }
@@ -108,7 +108,7 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
                                                                 </dt>
                                                                 <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
                                                                     {
-                                                                        data.users.map((user,index) => (<p>{index+1}. {user.email}</p>))
+                                                                        data.users.map((user,index) => (<p key={user._id.toString()}>{index+1}. {user.email}</p>))
                                                                     }
 
                                                                 </dd>
@@ -141,7 +141,6 @@ const ProfileDrawer : React.FC<ProfileDrawerProps> = ({
                                                             </>
                                                         )}
                                                     </dl>
-
                                                 </div>
 
                                             </div>

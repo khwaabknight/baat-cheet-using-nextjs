@@ -1,11 +1,11 @@
 'use client';
 
-import User from "@/models/userModel";
+import User, { UserType } from "@/models/userModel";
 import React from "react";
 import UserBox from "./UserBox";
 
 interface UserListProps {
-    items: typeof User[];
+    items: UserType[];
 }
 
 export const UserList : React.FC<UserListProps> = ({items}) => {
@@ -20,8 +20,8 @@ export const UserList : React.FC<UserListProps> = ({items}) => {
           </div>
         </div>
         {
-          items.map((item : typeof User) => (
-            <UserBox key={item._id} data={item} />
+          items.map((item : UserType) => (
+            <UserBox key={item._id.toString()} data={item} />
 
           ))
         }

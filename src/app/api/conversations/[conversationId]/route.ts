@@ -2,6 +2,7 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import { pusherServer } from "@/app/libs/pusher";
 import { connect } from "@/dbconfig/dbconfig";
 import Conversation from "@/models/conversationModel";
+import { UserType } from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
 interface IParams {
@@ -30,7 +31,7 @@ export async function DELETE(
         
         const deletedConversation = await Conversation.deleteMany({_id:conversationId,users:currentUser._id});
 
-        existingConversation.users.forEach((user) => {
+        existingConversation.users.forEach((user : UserType) => {
             if(user.email) {
                 pusherServer.trigger(user.email,'delete-conversation',existingConversation);
             }
